@@ -202,7 +202,7 @@ func (c *Client) Execute(
 
 	err = json.Unmarshal(b, &executionResponse)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("error unmarshalling execution response (%s): %w", string(b), err)
 	}
 
 	return executionResponse.Result, nil
