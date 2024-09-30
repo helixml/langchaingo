@@ -8,6 +8,8 @@ import (
 	"io"
 	"net/http"
 	"os"
+
+	"github.com/davecgh/go-spew/spew"
 )
 
 type listResponse struct {
@@ -178,10 +180,13 @@ func (c *Client) Execute(
 	input string,
 	params map[string]string,
 ) (interface{}, error) {
+	fmt.Println("URL: ", formatExecuteURL(actionID))
+
 	body, err := createPayload(input, params)
 	if err != nil {
 		return "", err
 	}
+
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, formatExecuteURL(actionID), body)
 	if err != nil {
 		return "", err
@@ -235,6 +240,8 @@ func formatExecuteURL(actionID string) string {
 
 func createPayload(input string, params map[string]string) (*bytes.Buffer, error) {
 	params["instructions"] = input
+
+	spew.Dump(params)
 
 	b, err := json.Marshal(params)
 	if err != nil {
